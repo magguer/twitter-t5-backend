@@ -24,11 +24,7 @@ passport(app);
 routes(app);
 
 app.use(flash());
-/* app.use(function (req, res, next) {
-  res.locals.message = req.flash();
-  next();
-});
- */
+
 app.listen(APP_PORT, () => {
   console.log(`\n[Express] Servidor corriendo en el puerto ${APP_PORT}.`);
   console.log(`[Express] Ingresar a http://localhost:${APP_PORT}.\n`);

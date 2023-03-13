@@ -12,10 +12,13 @@
  * cantidad de registros de prueba que se insertarán en la base de datos.
  *
  */
-const slugify = require("slugify");
 const { faker } = require("@faker-js/faker");
 const { User } = require("../models");
 const bcrypt = require("bcryptjs");
+/* const jwt = require('jsonwebtoken'); */
+/* const slugify = require("slugify"); */
+
+
 
 faker.locale = "es";
 
@@ -23,19 +26,24 @@ module.exports = async () => {
   const users = [];
 
   for (let i = 0; i <= process.env.TOTAL_USERS; i++) {
+
     const firstname = faker.name.firstName();
     const lastname = faker.name.lastName();
-    console.log(firstname,lastname)
-  
+    const username = `${firstname}_${lastname}`
+
+    /*     const payload = username
+        const secret = 'privatekey'
+        const token = jwt.sign(payload, secret) */
 
     const user = new User({
       firstname,
       lastname,
-      username: `${firstname}_${lastname}`, //Pasar a minusuclas
+      username, //Pasar a minusuclas
       password: await bcrypt.hash("123", 8),
       image: faker.internet.avatar(),
       description: faker.lorem.sentence(10),
-      email:`${firstname}_${lastname}@gmail.com`
+      email: `${firstname}_${lastname}@gmail.com`,
+      /* token */
     });
     users.push(user);
   }

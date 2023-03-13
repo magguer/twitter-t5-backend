@@ -50,7 +50,6 @@ async function show404(req, res) {
 }
 
 async function users(req, res) {
-  console.log("llego");
   const allUsers = await User.find()
   res.json(allUsers)
 }

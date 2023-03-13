@@ -1,9 +1,17 @@
 const { Schema, mongoose } = require("../db");
-const bcrypt = require("bcryptjs");
 const slugify = require("slugify");
+const jwt = require('jsonwebtoken');
+
+// Creacion de JWT
+/* const payload = username
+const secret = 'privatekey'
+const token = jwt.sign(payload, secret) */
 
 const userSchema = new Schema(
   {
+    token: {
+      type: String,
+    },
     firstname: {
       type: String,
       required: [true, "Inserte un nombre."],
@@ -58,6 +66,13 @@ const userSchema = new Schema(
   },
   { timestamps: true }
 );
+
+userSchema.pre('save', async function (next) {
+  const payload = { username: this.username }
+  const secret = 'privatekey'
+  this.token = jwt.sign(payload, secret)
+  next();
+})
 
 // Slugify para el username y el email
 
