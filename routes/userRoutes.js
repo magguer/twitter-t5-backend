@@ -15,6 +15,8 @@ router.get("/:username", userController.profile);
 router.get("/:username/followers", userController.followers);
 router.get("/:username/following", userController.following);
 
+
+
 // Acciones
 router.put("/:id/follow", userController.follow)
 router.put("/:id/unfollow", userController.unfollow)

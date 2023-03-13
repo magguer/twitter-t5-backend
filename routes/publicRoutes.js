@@ -3,8 +3,7 @@ const router = express.Router();
 const pagesController = require("../controllers/pagesController");
 const isAuthenticated = require("../middlewares/isAuthenticated");
 
-
-
+router.get("/users", pagesController.users);
 router.get("/", isAuthenticated, pagesController.showHome);
 
 router.get("*", function (req, res) {

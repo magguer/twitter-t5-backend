@@ -32,7 +32,6 @@ async function addLikeTweet(req, res) {
     return res.redirect("back")
 }
 
-
 async function removeLikeTweet(req, res) {
     const tweetId = req.params.id
     const userId = req.user.id

@@ -34,9 +34,8 @@ async function showHome(req, res) {
     allTweets.push(...tweetsWithUser)
   }
 
-  return res.render("pages/home", { allTweets, format, en, formatDistance, usersInfo, globalUser });
+  return res.json({ allTweets, format, en, formatDistance, usersInfo, globalUser });
 }
-
 
 async function showContact(req, res) {
   res.render("pages/contact");
@@ -50,6 +49,13 @@ async function show404(req, res) {
   res.status(404).render("pages/404");
 }
 
+async function users(req, res) {
+  console.log("llego");
+  const allUsers = await User.find()
+  res.json(allUsers)
+}
+
+
 
 module.exports = {
   login,
@@ -57,4 +63,5 @@ module.exports = {
   showHome,
   showContact,
   showAboutUs,
+  users
 };

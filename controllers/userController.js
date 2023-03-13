@@ -10,7 +10,7 @@ async function followers(req, res) {
   const userFollowers = await User.findOne({ username: req.params.username });
   const followers = userFollowers.followers;
   const users = await User.find({ _id: { $in: followers } });
-  return res.render("pages/followers", { users, userFollowers, usersInfo, globalUser });
+  return res.json({ users, userFollowers, usersInfo, globalUser });
 }
 
 /* Página Following */
@@ -20,7 +20,7 @@ async function following(req, res) {
   const userFollowing = await User.findOne({ username: req.params.username });
   const followings = userFollowing.following;
   const users = await User.find({ _id: { $in: followings } });
-  return res.render("pages/following", { users, userFollowing, usersInfo, globalUser });
+  return res.json({ users, userFollowing, usersInfo, globalUser });
 }
 
 /*  Perfil de Usuario */
@@ -31,7 +31,7 @@ async function profile(req, res) {
     username: req.params.username,
   }).populate({ path: "tweets", options: { sort: { createdAt: -1 } } });
   //const userTweets = await User.findById(req.user.id).populate({ path: "tweets", options: { sort: { createdAt: -1 } } });
-  return res.render("pages/profile", { userProfile, format, en, formatDistance, usersInfo, globalUser });
+  return res.json({ userProfile, format, en, formatDistance, usersInfo, globalUser });
 }
 
 async function bannerEdit(req, res) {
@@ -76,5 +76,6 @@ module.exports = {
   follow,
   unfollow,
   profile,
-  bannerEdit
+  bannerEdit,
+
 };

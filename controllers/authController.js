@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 const { User } = require("../models");
 const formidable = require("formidable");
 
-
+// Singup Page.
 async function register(req, res) {
     res.render("users/register")
 }
@@ -53,11 +53,14 @@ function createUser(req, res) {
     })
 }
 
+
 const loginPassport = passport.authenticate("local", {
     successRedirect: "/",
     failureRedirect: "/login",
     failureFlash: true
 });
+
+
 
 
 module.exports = {
@@ -66,4 +69,5 @@ module.exports = {
     logout,
     loginPassport,
     createUser,
+
 };
