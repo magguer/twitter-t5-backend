@@ -1,5 +1,6 @@
 const { Schema, mongoose } = require("../db");
 const slugify = require("slugify");
+const bcrypt = require("bcryptjs");
 const jwt = require('jsonwebtoken');
 
 // Creacion de JWT
@@ -67,6 +68,7 @@ const userSchema = new Schema(
   { timestamps: true }
 );
 
+// Token - JWT
 userSchema.pre('save', async function (next) {
   const payload = { username: this.username }
   const secret = 'privatekey'
@@ -74,8 +76,14 @@ userSchema.pre('save', async function (next) {
   next();
 })
 
-// Slugify para el username y el email
+// Bcrypt - Password
 
+userSchema.pre('save', async function (next) {
+  this.password = await bcrypt.hash(this.password, 8)
+  next();
+})
+
+// Slugify para el username y el email
 userSchema.pre('save', async function (next) {
   // Expresion regular creada
   this.username = this.username.replace(/[$%]/gi, "")

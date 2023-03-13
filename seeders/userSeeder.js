@@ -39,7 +39,7 @@ module.exports = async () => {
       firstname,
       lastname,
       username, //Pasar a minusuclas
-      password: await bcrypt.hash("123", 8),
+      password: "123",
       image: faker.internet.avatar(),
       description: faker.lorem.sentence(10),
       email: `${firstname}_${lastname}@gmail.com`,

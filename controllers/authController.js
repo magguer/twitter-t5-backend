@@ -44,7 +44,7 @@ function createUser(req, res) {
                     email: fields.email,
                     username: fields.username,
                     image: files.image.newFilename,
-                    password: await bcrypt.hash(fields.password, 8)
+                    password: fields.password /* await bcrypt.hash(fields.password, 8) */
                 })
                 /* user.save() */
                 return res.redirect("/");
