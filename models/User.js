@@ -1,18 +1,16 @@
 const { Schema, mongoose } = require("../db");
 const slugify = require("slugify");
 const bcrypt = require("bcryptjs");
-const jwt = require('jsonwebtoken');
 
-// Creacion de JWT
-/* const payload = username
-const secret = 'privatekey'
-const token = jwt.sign(payload, secret) */
 
 const userSchema = new Schema(
   {
-    token: {
-      type: String,
-    },
+    tokens: [{
+      token: {
+        type: String,
+        required: true
+      }
+    }],
     firstname: {
       type: String,
       required: [true, "Inserte un nombre."],
@@ -68,19 +66,12 @@ const userSchema = new Schema(
   { timestamps: true }
 );
 
-// Token - JWT
-userSchema.pre('save', async function (next) {
-  const payload = { username: this.username }
-  const secret = 'privatekey'
-  this.token = jwt.sign(payload, secret)
-  next();
-})
-
 // Bcrypt - Password
-
 userSchema.pre('save', async function (next) {
-  this.password = await bcrypt.hash(this.password, 8)
-  next();
+  if (this.isModified("password") || this.isNew) {
+    this.password = await bcrypt.hash(this.password, 8)
+    next();
+  }
 })
 
 // Slugify para el username y el email
@@ -100,7 +91,5 @@ userSchema.pre('save', async function (next) {
 
 
 // Método para Slagify los usernames
-
 const User = mongoose.model("User", userSchema);
-
 module.exports = User;

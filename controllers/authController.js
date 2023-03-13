@@ -1,7 +1,7 @@
-const passport = require("passport");
 const bcrypt = require("bcryptjs");
 const { User } = require("../models");
 const formidable = require("formidable");
+const jwt = require("jsonwebtoken")
 
 // Singup Page.
 async function register(req, res) {
@@ -53,21 +53,39 @@ function createUser(req, res) {
     })
 }
 
+async function loginUser(req, res) {
+    console.log("REQ.BODY: ", req.body);
+    const user = await User.findOne({ email: req.body.email });
+    if (!user) {
+        console.log("El usuario  no  existe");
+    }
+    const match = await bcrypt.compare(req.body.password, user.password);
+    if (!match) {
+        console.log("La pass es inválida");
+    }
+    try {
+        const payload = { id: user.id }
+        const secret = 'privatekey'
+        const token = jwt.sign(payload, secret);
+        res.json({ user: user.username, user: user.id, token });
+    } catch (e) {
+        res.status(400).send(e);
+    }
+};
 
-const loginPassport = passport.authenticate("local", {
+
+/* const loginPassport = passport.authenticate("local", {
     successRedirect: "/",
     failureRedirect: "/login",
     failureFlash: true
-});
-
-
+}); */
 
 
 module.exports = {
     register,
     login,
+    loginUser,
     logout,
-    loginPassport,
     createUser,
 
 };

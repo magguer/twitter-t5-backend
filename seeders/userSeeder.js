@@ -39,7 +39,7 @@ module.exports = async () => {
       firstname,
       lastname,
       username, //Pasar a minusuclas
-      password: "123",
+      password: "asd",
       image: faker.internet.avatar(),
       description: faker.lorem.sentence(10),
       email: `${firstname}_${lastname}@gmail.com`,
