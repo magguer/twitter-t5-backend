@@ -1,0 +1,6 @@
+/* Colocar aquí CSS "propio". */
+html,
+body {
+    max-width: 216vh;
+    /* Ocultar barra horizontal*/
+}

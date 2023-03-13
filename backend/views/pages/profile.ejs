@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <%- include("../partials/meta") %>
+  </head>
+  <body>
+    <div class="ms-3 row">
+      <!-- NavBar -->
+      <div
+        style="position: relative"
+        class="col-2 border-top border-end border-bottom p-0"
+      >
+        <%- include("../partials/navbar") %>
+      </div>
+      <!-- Perfil Page -->
+      <div class="col-10 col-lg-7 p-0">
+        <div>
+          <!--           Edit Banner -->
+          <%if (user.username === userProfile.username){%>
+          <form action="/usuarios/banner?_method=put" method="post">
+            <div
+              style="position: absolute; width: 60px; height: 60px"
+              class="p-3"
+            >
+              <h3 style="position: absolute; z-index: 0">✒</h3>
+              <input
+                style="opacity: 0; position: absolute; z-index: 1"
+                class="form-control"
+                name="banner"
+                id="banner"
+                type="file"
+              />
+            </div>
+            <!--     <button type="submit" class="btn btn-succes">Cambiar</button> -->
+          </form>
+          <%}%> <% if(!userProfile.banner){ %>
+          <div
+            style="background-color: #1d9bf0; height: 10rem; width: 100%"
+          ></div>
+          <% } else { %>
+          <img
+            src="<%= userProfile.banner %>"
+            style="width: 100%; object-fit: cover; height: 10rem"
+          />
+          <% } %>
+        </div>
+        <div style="position: relative; top: -107px">
+          <% if (userProfile.image.includes("http")) { %>
+          <img
+            class="rounded-pill position-relative ms-3 border border-5 border-white"
+            style="
+              height: 7rem;
+              width: 7rem;
+              top: 55px;
+              border-style: solid;
+              border-color: white;
+            "
+            src="<%= userProfile.image %>"
+            alt="Gato"
+          />
+          <!--   coment -->
+          <% } else {%>
+          <img
+            class="rounded-pill position-relative ms-3 border border-5 border-white"
+            style="
+              width: 7rem;
+              height: 7rem;
+              top: 55px;
+              border-style: solid;
+              border-color: white;
+              object-fit: cover;
+            "
+            src="/img/<%= userProfile.image %>"
+            alt="Gato"
+          />
+          <%}%>
+
+          <!--         User Info -->
+          <% const userFollowing = globalUser.following.some((following) =>
+          following.id === userProfile.id) %>
+
+          <div class="p-3">
+            <% if ( userProfile.id !== globalUser.id) { %>
+            <!--   coment -->
+            <%if (!userFollowing) { %>
+            <div class="justify-content-end">
+              <form
+                action="/usuarios/<%= userProfile._id%>/follow?_method=put"
+                method="post"
+              >
+                <div class="d-flex justify-content-end mt-5">
+                  <button
+                    class="btn text-light rounded-pill"
+                    type="submit"
+                    style="background-color: #1d9bf0"
+                  >
+                    Follow
+                  </button>
+                </div>
+              </form>
+            </div>
+            <% } else { %>
+            <div class="justify-content-end">
+              <form
+                action="/usuarios/<%= userProfile._id%>/unfollow?_method=put"
+                method="post"
+              >
+                <div class="d-flex justify-content-end mt-5">
+                  <button
+                    type="submit"
+                    class="btn rounded-pill border"
+                    style="background-color: #ffffff; color: rgb(0, 0, 0)"
+                  >
+                    Unfollow
+                  </button>
+                </div>
+              </form>
+            </div>
+            <% } %>
+            <!--   coment -->
+            <% } else { %>
+            <div class="justify-content-end">
+              <div class="d-flex justify-content-end mt-5">
+                <button
+                  type="submit"
+                  class="btn rounded-pill border"
+                  style="background-color: #ffffff; color: rgb(0, 0, 0)"
+                >
+                  Your Profile
+                </button>
+              </div>
+            </div>
+            <% } %>
+
+            <h3 class="ms-3 mt-3 mb-0">
+              <%= userProfile.firstname %> <%= userProfile.lastname %>
+            </h3>
+            <div class="d-flex">
+              <div class="ms-3">
+                <small style="color: #647788; font-weight: 400">
+                  @<%= userProfile.username %></small
+                >
+              </div>
+              <div class="ms-auto d-flex align-items-center gap-3">
+                <div class="d-flex align-items-center gap-1">
+                  <small style="font-weight: 700; color: #000000"
+                    ><%= userProfile.followers.length %></small
+                  >
+                  <a
+                    class="text-decoration-none"
+                    href="/usuarios/<%=userProfile.username%>/followers"
+                    role="button"
+                    style="color: #647788"
+                  >
+                    Followers</a
+                  >
+                </div>
+                <div class="d-flex align-items-center gap-1">
+                  <small style="color: #000000; font-weight: 700"
+                    ><%= userProfile.following.length %></small
+                  >
+                  <a
+                    class="text-decoration-none"
+                    href="/usuarios/<%=userProfile.username%>/following"
+                    role="button"
+                    style="color: #647788"
+                  >
+                    Following</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="width: 100%">
+            <h6 class="ms-3 mt-3 fs-5 fw-semibold">Tweets</h6>
+            <div
+              class="ms-3"
+              style="background-color: #1d9bf0; width: 3.9rem; height: 4px"
+            ></div>
+          </div>
+          <% for (const tweet of userProfile.tweets) { %>
+          <!--           comment -->
+          <%- include("../partials/tweetProfile", { tweet }) %>
+          <!--           comment -->
+          <% } %>
+        </div>
+      </div>
+      <!-- MoreInfo -->
+      <div class="d-none d-lg-block col-lg-3 border p-0">
+        <%- include("../partials/moreinfo", { usersInfo, globalUser }) %>
+      </div>
+    </div>
+  </body>
+</html>
