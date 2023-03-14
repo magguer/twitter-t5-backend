@@ -25,7 +25,7 @@ async function following(req, res) {
 /*  Perfil de Usuario */
 async function profile(req, res) {
   const usersInfo = await User.aggregate([{ $sample: { size: 4 } }]);
-  const globalUser = await User.findById(req.user.id).populate("following");
+
   const userProfile = await User.findOne({
     username: req.params.username,
   }).populate({ path: "tweets", options: { sort: { createdAt: -1 } } });
@@ -36,7 +36,6 @@ async function profile(req, res) {
     en,
     formatDistance,
     usersInfo,
-    globalUser,
   });
 }
 
