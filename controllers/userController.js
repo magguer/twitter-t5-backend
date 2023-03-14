@@ -5,12 +5,10 @@ const { en } = require("date-fns/locale");
 /* Página Followers */
 async function followers(req, res) {
   const usersInfo = await User.aggregate([{ $sample: { size: 4 } }]);
-  const globalUser = await User.findById(req.user.id).populate("following");
-  /* await followers.populate(usersInfo, {path: "followers"}) */
   const userFollowers = await User.findOne({ username: req.params.username });
   const followers = userFollowers.followers;
   const users = await User.find({ _id: { $in: followers } });
-  return res.json({ users, userFollowers, usersInfo, globalUser });
+  return res.json({ users, userFollowers, usersInfo });
 }
 
 /* Página Following */
@@ -25,7 +23,6 @@ async function following(req, res) {
 /*  Perfil de Usuario */
 async function profile(req, res) {
   const usersInfo = await User.aggregate([{ $sample: { size: 4 } }]);
-
   const userProfile = await User.findOne({
     username: req.params.username,
   }).populate({ path: "tweets", options: { sort: { createdAt: -1 } } });
