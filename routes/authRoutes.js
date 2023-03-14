@@ -11,7 +11,7 @@ const authController = require("../controllers/authController")
 
 router.get("/register", authController.register);
 router.post("/register", authController.createUser);
-router.post("/login", authController.loginUser);
+router.post("/token", authController.token);
 router.get("/login", authController.login);
 router.post("/logout", authController.logout);
 

@@ -2,9 +2,11 @@ const express = require("express");
 const router = express.Router();
 const pagesController = require("../controllers/pagesController");
 const isAuthenticated = require("../middlewares/isAuthenticated");
+const { expressjwt: checkJwt } = require("express-jwt")
 
-router.get("/users", pagesController.users);
-router.get("/", isAuthenticated, pagesController.showHome);
+router.get("/users", checkJwt({ secret: "privateKey", algorithms: ["HS256"] }), pagesController.users);
+router.get("/", checkJwt({ secret: "privateKey", algorithms: ["HS256"] }), pagesController.showHome);
+
 
 router.get("*", function (req, res) {
   res.status(404).render("pages/404");

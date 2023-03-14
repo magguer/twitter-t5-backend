@@ -2,6 +2,7 @@ const bcrypt = require("bcryptjs");
 const { User } = require("../models");
 const formidable = require("formidable");
 const jwt = require("jsonwebtoken");
+const { expressjwt: checkJwt } = require("express-jwt")
 
 // Singup Page.
 async function register(req, res) {
@@ -62,8 +63,7 @@ function createUser(req, res) {
   });
 }
 
-async function loginUser(req, res) {
-  console.log("REQ.BODY: ", req.body);
+async function token(req, res) {
   const user = await User.findOne({ email: req.body.email });
   if (!user) {
     console.log("El usuario  no  existe");
@@ -74,7 +74,7 @@ async function loginUser(req, res) {
   }
   try {
     const payload = { id: user.id };
-    const secret = "privatekey";
+    const secret = "privateKey";
     const token = jwt.sign(payload, secret);
     res.json({ user: user.username, userId: user.id, token });
   } catch (e) {
@@ -82,16 +82,10 @@ async function loginUser(req, res) {
   }
 }
 
-/* const loginPassport = passport.authenticate("local", {
-    successRedirect: "/",
-    failureRedirect: "/login",
-    failureFlash: true
-}); */
-
 module.exports = {
   register,
   login,
-  loginUser,
+  token,
   logout,
   createUser,
 };
