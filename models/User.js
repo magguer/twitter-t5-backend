@@ -26,7 +26,7 @@ const userSchema = new Schema(
     },
     image: {
       type: String,
-      required: [true, "Inserte una imagen."],
+      /*  required: [true, "Inserte una imagen."], */
     },
     banner: {
       type: String,

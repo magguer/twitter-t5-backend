@@ -4,7 +4,6 @@ const pagesController = require("../controllers/pagesController");
 const isAuthenticated = require("../middlewares/isAuthenticated");
 const { expressjwt: checkJwt } = require("express-jwt")
 
-router.get("/users", checkJwt({ secret: "privateKey", algorithms: ["HS256"] }), pagesController.users);
 router.get("/", checkJwt({ secret: "privateKey", algorithms: ["HS256"] }), pagesController.showHome);
 
 

@@ -2,15 +2,6 @@ const { Tweet, User } = require("../models");
 const { format, formatDistance } = require("date-fns");
 const { en } = require("date-fns/locale");
 
-async function register(req, res) {
-  res.render("users/sign-up");
-}
-
-// Display a listing of the resource.
-async function login(req, res) {
-  res.render("users/login");
-}
-
 // Page Home
 async function showHome(req, res) {
   const usersInfo = await User.aggregate([{ $sample: { size: 4 } }])
@@ -37,30 +28,8 @@ async function showHome(req, res) {
   return res.json({ allTweets, format, en, formatDistance, usersInfo, globalUser });
 }
 
-async function showContact(req, res) {
-  res.render("pages/contact");
-}
-
-async function showAboutUs(req, res) {
-  res.render("pages/aboutUs");
-}
-
-async function show404(req, res) {
-  res.status(404).render("pages/404");
-}
-
-async function users(req, res) {
-  const allUsers = await User.find()
-  res.json(allUsers)
-}
-
 
 
 module.exports = {
-  login,
-  register,
   showHome,
-  showContact,
-  showAboutUs,
-  users
 };
