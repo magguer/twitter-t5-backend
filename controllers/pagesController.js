@@ -5,7 +5,6 @@ const { en } = require("date-fns/locale");
 // Page Home
 async function showHome(req, res) {
   const usersInfo = await User.aggregate([{ $sample: { size: 4 } }])
-  const globalUser = await User.findById(req.user.id).populate("following")
   const userFollowing = await User.findById(req.user._id);
   const followings = userFollowing.following;
   const users = await User.find({ _id: { $in: followings } }).populate("tweets")
@@ -25,7 +24,7 @@ async function showHome(req, res) {
     allTweets.push(...tweetsWithUser)
   }
 
-  return res.json({ allTweets, format, en, formatDistance, usersInfo, globalUser });
+  return res.json({ allTweets, format, en, formatDistance, usersInfo });
 }
 
 
