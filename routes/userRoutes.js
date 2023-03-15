@@ -2,26 +2,23 @@ const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/userController");
 const tweetsController = require("../controllers/tweetsController");
-// const isAuthenticated = require("../middlewares/isAuthenticated");
+const { expressjwt: checkJwt } = require("express-jwt");
 
-// Rutas relacionadas a Profile, Followers, Following
+// REST API, para los usuarios
 
-// Hay que agregarle el /:user a las rutas NO OLVIDAR
+router.get("/:username", checkJwt({ secret: "privateKey", algorithms: ["HS256"] }), userController.profile);
+router.get("/:username/followers", checkJwt({ secret: "privateKey", algorithms: ["HS256"] }), userController.followers);
+router.get("/:username/following", checkJwt({ secret: "privateKey", algorithms: ["HS256"] }), userController.following);
 
-// router.use(isAuthenticated);
+router.post("/user", userController.store);
+router.post("/token", userController.token);
 
-// Páginas
-router.get("/:username", userController.profile);
-router.get("/:username/followers", userController.followers);
-router.get("/:username/following", userController.following);
-
-// Acciones
-router.put("/:id/follow", userController.follow);
-router.put("/:id/unfollow", userController.unfollow);
+router.put("/:id/follow", checkJwt({ secret: "privateKey", algorithms: ["HS256"] }), userController.follow);
+router.put("/:id/unfollow", checkJwt({ secret: "privateKey", algorithms: ["HS256"] }), userController.unfollow);
 router.put("/banner", userController.bannerEdit);
-router.put("/", tweetsController.newTweet);
-router.delete("/:id", tweetsController.deleteTweet);
-router.put("/tweets/:id/add", tweetsController.addLikeTweet);
-router.put("/tweets/:id/remove", tweetsController.removeLikeTweet);
+router.put("/", checkJwt({ secret: "privateKey", algorithms: ["HS256"] }), tweetsController.newTweet);
+router.delete("/:id", checkJwt({ secret: "privateKey", algorithms: ["HS256"] }), tweetsController.deleteTweet);
+router.put("/tweets/:id/", checkJwt({ secret: "privateKey", algorithms: ["HS256"] }), tweetsController.addLikeTweet);
+router.delete("/tweets/:id/", checkJwt({ secret: "privateKey", algorithms: ["HS256"] }), tweetsController.removeLikeTweet);
 
 module.exports = router;
