@@ -61,7 +61,9 @@ async function token(req, res) {
       token,
       userImage: user.image,
       userFirstName: user.firstname,
-      userLastName: user.lastname
+      userLastName: user.lastname,
+      userFollowers: user.followers,
+      userFollowings: user.following
     });
   } catch (e) {
     res.status(400).send(e);
