@@ -5,49 +5,41 @@ const jwt = require("jsonwebtoken");
 
 //  Crear usuario en la DB
 async function createUser(req, res) {
-  /*  const form = formidable({
-     uploadDir: __dirname + "/../public/img",
-     keepExtensions: true,
-   });
-   form.parse(req, async (err, fields, files) => {
-     const users = await User.find();
-     if (
-       fields.username === "" ||
-       fields.email === "" ||
-       fields.password === "" ||
-       fields.firstname === ""
-     ) {
-       req.flash("text", "Rellena todos los campos.");
-       res.redirect("back");
-     } else {
-       const unavailableUser = users.some(
-         (u) => u.username === fields.username || u.email === fields.email
-       );
-       if (unavailableUser) {
-         req.flash("text", "El usuario ya existe.");
-         res.redirect("back");
-       } else {
-         await User.create({
-           firstname: fields.firstname,
-           lastname: fields.lastname,
-           email: fields.email,
-           username: fields.username,
-           image: files.image.newFilename,
-           password: fields.password,
-         });
-       }
-     
-     }
-   }); */
-  const user = await User.create({
-    firstname: req.body.firstname,
-    lastname: req.body.lastname,
-    email: req.body.email,
-    username: req.body.username,
-    /* image: req.image.newFilename, */
-    password: req.body.password,
+  const form = formidable({
+    uploadDir: __dirname + "/../public/img",
+    keepExtensions: true,
+    multiples: true,
   });
-  res.json(user)
+  form.parse(req, async (err, fields, files) => {
+    //console.log("Estos son los fields:", fields);
+    //console.log("Estos son los files:", files);
+    const users = await User.find();
+    if (
+      fields.username === "" ||
+      fields.email === "" ||
+      fields.password === "" ||
+      fields.firstname === ""
+    ) {
+      res.status(404).json("Rellena todos los campos.")
+    } else {
+      const unavailableUser = users.some(
+        (u) => u.username === fields.username || u.email === fields.email
+      );
+      if (unavailableUser) {
+        res.status(404).json("El usuario ya existe.")
+      } else {
+        await User.create({
+          firstname: fields.firstname,
+          lastname: fields.lastname,
+          email: fields.email,
+          username: fields.username,
+          image: files.image.newFilename,
+          password: fields.password,
+        });
+        res.status(201).json("Todo OK")
+      }
+    }
+  });
 }
 
 async function token(req, res) {
@@ -63,7 +55,14 @@ async function token(req, res) {
     const payload = { id: user.id };
     const secret = "privateKey";
     const token = jwt.sign(payload, secret);
-    res.json({ user: user.username, userId: user.id, token });
+    res.json({
+      userName: user.username,
+      userId: user.id,
+      token,
+      userImage: user.image,
+      userFirstName: user.firstname,
+      userLastName: user.lastname
+    });
   } catch (e) {
     res.status(400).send(e);
   }
