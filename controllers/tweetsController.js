@@ -1,6 +1,43 @@
-const { User, Tweet } = require("../models");
+const { Tweet, User } = require("../models");
 
-async function newTweet(req, res) {
+// GET - Tweets
+async function index(req, res) {
+    /*     const usersInfo = await User.aggregate([{ $sample: { size: 4 } }]); */
+    const user = await User.findById(req.auth.id);
+    const tweets = await Tweet.find({ user: { $in: [user, ...user.following] } })
+        .sort({ createdAt: -1 })
+        .populate("user")
+        .populate("likes");
+
+    /*  const allUsersTweets = [];
+     const allTweets = []; */
+    /*  const user = await User.findById(req.auth.id).populate({
+         path: "tweets",
+         options: { sort: { createdAt: -1 } },
+     });
+     const myTweets = user.tweets;
+     allUsersTweets.push(...myTweets);
+ 
+     for (const newuser of users) {
+         const tweets = newuser.tweets;
+         allUsersTweets.push(...tweets);
+     }
+ 
+     for (const tweet of allUsersTweets) {
+         const tweetsWithUser = await Tweet.find(tweet._id)
+             .populate({ path: "user", options: { sort: { createdAt: -1 } } })
+             .populate("likes");
+         allTweets.push(...tweetsWithUser);
+     }
+  */
+
+    return res.json({
+        tweets
+    });
+}
+
+// POST - Tweet
+async function store(req, res) {
     const newTweet = new Tweet({
         user: req.user.id,
         text: req.body.newTweet,
@@ -12,7 +49,8 @@ async function newTweet(req, res) {
     return res.redirect("/");
 }
 
-async function deleteTweet(req, res) {
+// DELETE - Tweet
+async function destroy(req, res) {
     await Tweet.findByIdAndDelete(req.params.id)
     await User.findByIdAndUpdate(req.user.id,
         { $pull: { tweets: req.params.id } }
@@ -20,7 +58,8 @@ async function deleteTweet(req, res) {
     return res.redirect(`back`)
 }
 
-async function addLikeTweet(req, res) {
+// PATCH - Like
+async function LikeTweet(req, res) {
     const tweetId = req.params.id
     const userId = req.user.id
     await Tweet.findByIdAndUpdate(tweetId,
@@ -32,7 +71,8 @@ async function addLikeTweet(req, res) {
     return res.redirect("back")
 }
 
-async function removeLikeTweet(req, res) {
+// PATCH - Unlike
+async function UnlikeTweet(req, res) {
     const tweetId = req.params.id
     const userId = req.user.id
     await Tweet.findByIdAndUpdate(tweetId,
@@ -46,8 +86,9 @@ async function removeLikeTweet(req, res) {
 
 
 module.exports = {
-    newTweet,
-    deleteTweet,
-    addLikeTweet,
-    removeLikeTweet
+    index,
+    store,
+    destroy,
+    LikeTweet,
+    UnlikeTweet
 };

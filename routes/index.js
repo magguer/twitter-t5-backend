@@ -1,16 +1,12 @@
-const makeUserAvailableInViews = require("../middlewares/makeUserAvailableInViews");
+const usersRoutes = require("./usersRoutes");
+const tweetsRoutes = require("./tweetsRoutes");
+
 /**
  * No hay una única forma de organizar las rutas de un sitio web.
  * Una alternativa podría ser organizar las rutas por entidad:
- */
-
-const userRoutes = require("./userRoutes");
-const authRoutes = require("./authRoutes");
-const tweetsRoutes = require("./tweetsRoutes");
-// const articleRoutes = require("./articleRoutes");
-// const commentRoutes = require("./commentRoutes");
-
-/**
+ *
+ *
+ *
  * Otra alternativa podría ser organizar las rutas según su nivel de
  * privacidad (ej: si son rutas públicas o privadas).
  *
@@ -20,8 +16,8 @@ const tweetsRoutes = require("./tweetsRoutes");
  * una API esta alternativa no tendría sentido.
  */
 
-const publicRoutes = require("./publicRoutes");
-const privateRoutes = require("./privateRoutes");
+/* const publicRoutes = require("./publicRoutes");
+const privateRoutes = require("./privateRoutes"); */
 
 module.exports = (app) => {
   /**
@@ -31,13 +27,8 @@ module.exports = (app) => {
    * en inglés.
    */
 
-  // Agregar el parametro /:user en el use
-  app.use(makeUserAvailableInViews);
-
-
-  app.use("/usuarios", userRoutes);
-  app.use("/", authRoutes);
+  /*   app.use("/", publicRoutes);
+    app.use("/admin", privateRoutes); */
   app.use("/tweets", tweetsRoutes)
-  app.use("/", publicRoutes);
-  app.use("/admin", privateRoutes);
+  app.use("/usuarios", usersRoutes);
 };
