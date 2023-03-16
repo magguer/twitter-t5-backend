@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 
 // POST - Tokens
 async function token(req, res) {
-  const user = await User.findOne({ email: req.body.email });
+  const user = await User.findOne({ email: req.body.email }).populate("tweets").populate("following").populate("followers");
   if (!user) {
     res.json("El usuario  no  existe");
   }
@@ -20,10 +20,13 @@ async function token(req, res) {
     res.json({
       userName: user.username,
       userId: user.id,
-      token,
+      userToken: token,
       userImage: user.image,
       userFirstName: user.firstname,
       userLastName: user.lastname,
+      userFollowers: user.followers,
+      userFollowing: user.following,
+      userTweets: user.tweets
     });
   } catch (e) {
     res.status(400).send(e);
