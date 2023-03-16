@@ -18,7 +18,7 @@ async function token(req, res) {
   }
   try {
     const payload = { id: user.id };
-    const secret = "privateKey";
+    const secret = process.env.JWT_SECRET;
     const token = jwt.sign(payload, secret, { expiresIn: "1h" });
     res.json({
       userName: user.username,
@@ -85,7 +85,6 @@ async function bannerEdit(req, res) {
 async function follow(req, res) {
   const userId = req.auth.id;
   const follow = req.params.id;
-
   await User.findByIdAndUpdate(userId, {
     $push: { following: follow },
   });
@@ -111,7 +110,6 @@ async function show(req, res) {
   const userProfile = await User.findOne({
     username: req.params.username,
   }).populate({ path: "tweets", options: { sort: { createdAt: -1 } } });
-  //const userTweets = await User.findById(req.user.id).populate({ path: "tweets", options: { sort: { createdAt: -1 } } });
   return res.json({
     userProfile,
   });
@@ -119,41 +117,38 @@ async function show(req, res) {
 
 // GET - Followers de Usuario
 async function followers(req, res) {
-  /*   const usersInfo = await User.aggregate([{ $sample: { size: 4 } }]); */
   const userParamsFollowers = await User.findOne({
     username: req.params.username,
   });
   const followers = userParamsFollowers.followers;
   const usersFollowers = await User.find({ _id: { $in: followers } });
-  return res.json({ usersFollowers, userParamsFollowers /* , usersInfo */ });
+  return res.json({ usersFollowers, userParamsFollowers });
 }
 
 // GET - Following de Usuario
 async function following(req, res) {
-  /*  const usersInfo = await User.aggregate([{ $sample: { size: 4 } }]); */
   const userParamsFollowing = await User.findOne({
     username: req.params.username,
   });
   const followings = userParamsFollowing.following;
   const usersFollowing = await User.find({ _id: { $in: followings } });
-  return res.json({ usersFollowing, userParamsFollowing /* , usersInfo */ });
+  return res.json({ usersFollowing, userParamsFollowing });
 }
 
 // GET - 4 RANDOM USERS
-
 async function randomUser(req, res) {
   const usersInfo = await User.aggregate([{ $sample: { size: 4 } }]);
   return res.json(usersInfo);
 }
 
 module.exports = {
+  store,
+  show,
   followers,
   following,
   follow,
   unfollow,
-  show,
   bannerEdit,
-  store,
   token,
-  randomUser,
+  randomUser
 };

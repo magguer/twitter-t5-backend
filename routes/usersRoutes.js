@@ -6,13 +6,13 @@ const usersController = require("../controllers/usersController");
 router.post("/users", usersController.store);
 router.post("/tokens", usersController.token);
 
-router.use(checkJwt({ secret: "privateKey", algorithms: ["HS256"] }));
+router.use(checkJwt({ secret: process.env.JWT_SECRET, algorithms: ["HS256"] }));
 
 router.get("/random", usersController.randomUser);
 router.get("/:username", usersController.show);
 router.get("/:username/followers", usersController.followers);
 router.get("/:username/following", usersController.following);
-router.patch("/banner", usersController.bannerEdit);
+/* router.patch("/banner", usersController.bannerEdit); */
 
 // Hacer Toggle de Follow
 router.patch("/:id/follow", usersController.follow);

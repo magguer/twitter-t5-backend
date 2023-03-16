@@ -4,7 +4,7 @@ const { expressjwt: checkJwt } = require("express-jwt");
 const tweetsController = require("../controllers/tweetsController");
 
 
-router.use(checkJwt({ secret: "privateKey", algorithms: ["HS256"] }))
+router.use(checkJwt({ secret: process.env.JWT_SECRET, algorithms: ["HS256"] }))
 
 router.get("/", tweetsController.index);
 router.post("/", tweetsController.store);
