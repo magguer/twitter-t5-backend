@@ -19,7 +19,7 @@ async function token(req, res) {
   try {
     const payload = { id: user.id };
     const secret = process.env.JWT_SECRET;
-    const token = jwt.sign(payload, secret, { expiresIn: "1h" });
+    const token = jwt.sign(payload, secret, { expiresIn: "24h" });
     res.json({
       userName: user.username,
       userId: user.id,

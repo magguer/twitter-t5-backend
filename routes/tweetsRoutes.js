@@ -11,8 +11,8 @@ router.post("/", tweetsController.store);
 router.delete("/:id", tweetsController.destroy);
 
 //Hacer Toggle de Likes
-router.patch("/tweets/:id/", tweetsController.LikeTweet);
-router.patch("/tweets/:id/", tweetsController.UnlikeTweet);
+router.patch("/like/:id/", tweetsController.likeTweet);
+router.patch("/dislike/:id/", tweetsController.dislikeTweet);
 
 
 module.exports = router;

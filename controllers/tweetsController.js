@@ -33,35 +33,35 @@ async function destroy(req, res) {
 }
 
 // PATCH - Like
-async function LikeTweet(req, res) {
+async function likeTweet(req, res) {
   const tweetId = req.params.id;
-  const userId = req.user.id;
+  const userId = req.auth.id;
   await Tweet.findByIdAndUpdate(
     tweetId,
     {
       $push: { likes: userId },
     }
   );
-  return res.redirect("back");
+  return res.status(200).json("OK");
 }
 
 // PATCH - Unlike
-async function UnlikeTweet(req, res) {
+async function dislikeTweet(req, res) {
   const tweetId = req.params.id;
-  const userId = req.user.id;
+  const userId = req.auth.id;
   await Tweet.findByIdAndUpdate(
     tweetId,
     {
       $pull: { likes: userId },
     }
   );
-  return res.redirect("back");
+  return res.status(200).json("OK");
 }
 
 module.exports = {
   index,
   store,
   destroy,
-  LikeTweet,
-  UnlikeTweet,
+  likeTweet,
+  dislikeTweet,
 };
