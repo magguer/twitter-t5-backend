@@ -14,36 +14,26 @@
  */
 const { faker } = require("@faker-js/faker");
 const { User } = require("../models");
-const bcrypt = require("bcryptjs");
-/* const jwt = require('jsonwebtoken'); */
-/* const slugify = require("slugify"); */
-
-
 
 faker.locale = "es";
 
 module.exports = async () => {
   const users = [];
 
-  for (let i = 0; i <= process.env.TOTAL_USERS; i++) {
+  for (let i = 0; i <= Number(process.env.TOTAL_USERS); i++) {
 
     const firstname = faker.name.firstName();
     const lastname = faker.name.lastName();
     const username = `${firstname}_${lastname}`
 
-    /*     const payload = username
-        const secret = 'privatekey'
-        const token = jwt.sign(payload, secret) */
-
     const user = new User({
       firstname,
       lastname,
-      username, //Pasar a minusuclas
+      username,
       password: "asd",
       image: faker.internet.avatar(),
       description: faker.lorem.sentence(10),
       email: `${firstname}_${lastname}@gmail.com`,
-      /* token */
     });
     users.push(user);
   }
@@ -51,14 +41,12 @@ module.exports = async () => {
   for (const user of users) {
     const randomUser =
       users[
-      faker.datatype.number({ min: 0, max: process.env.TOTAL_USERS - 1 })
+      faker.datatype.number({ min: 0, max: Number(process.env.TOTAL_USERS) - 1 })
       ];
     user.following.push(randomUser);
     randomUser.followers.push(user);
     await user.save()
   }
 
-  /*   console.log(users) */
-  //await User.insertMany(users);
   console.log("[Database] Se corrió el seeder de Users.");
 };
