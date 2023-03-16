@@ -2,16 +2,16 @@ const { Tweet, User } = require("../models");
 
 // GET - Tweets
 async function index(req, res) {
-    /*     const usersInfo = await User.aggregate([{ $sample: { size: 4 } }]); */
-    const user = await User.findById(req.auth.id);
-    const tweets = await Tweet.find({ user: { $in: [user, ...user.following] } })
-        .sort({ createdAt: -1 })
-        .populate("user")
-        .populate("likes");
+  /*     const usersInfo = await User.aggregate([{ $sample: { size: 4 } }]); */
+  const user = await User.findById(req.auth.id);
+  const tweets = await Tweet.find({ user: { $in: [user, ...user.following] } })
+    .sort({ createdAt: -1 })
+    .populate("user")
+    .populate("likes");
 
-    /*  const allUsersTweets = [];
+  /*  const allUsersTweets = [];
      const allTweets = []; */
-    /*  const user = await User.findById(req.auth.id).populate({
+  /*  const user = await User.findById(req.auth.id).populate({
          path: "tweets",
          options: { sort: { createdAt: -1 } },
      });
@@ -31,64 +31,65 @@ async function index(req, res) {
      }
   */
 
-    return res.json({
-        tweets
-    });
+  return res.json({
+    tweets,
+  });
 }
 
 // POST - Tweet
 async function store(req, res) {
-    const newTweet = new Tweet({
-        user: req.user.id,
-        text: req.body.newTweet,
-    });
-    newTweet.save();
-    await User.findByIdAndUpdate(req.user.id,
-        { $push: { tweets: newTweet } }
-    );
-    return res.redirect("/");
+  const newTweet = new Tweet({
+    user: req.auth.id, //auth por jwt en vez de .user
+    text: req.body.tweet, // mismo nombre del value
+  });
+  newTweet.save();
+  await User.findByIdAndUpdate(req.auth.id, { $push: { tweets: newTweet } });
+  return res.status(200).json("OK");
 }
 
 // DELETE - Tweet
 async function destroy(req, res) {
-    await Tweet.findByIdAndDelete(req.params.id)
-    await User.findByIdAndUpdate(req.user.id,
-        { $pull: { tweets: req.params.id } }
-    );
-    return res.redirect(`back`)
+  await Tweet.findByIdAndDelete(req.params.id);
+  await User.findByIdAndUpdate(req.user.id, {
+    $pull: { tweets: req.params.id },
+  });
+  return res.redirect(`back`);
 }
 
 // PATCH - Like
 async function LikeTweet(req, res) {
-    const tweetId = req.params.id
-    const userId = req.user.id
-    await Tweet.findByIdAndUpdate(tweetId,
-        {
-            $push: { likes: userId }
-        }/*        {
+  const tweetId = req.params.id;
+  const userId = req.user.id;
+  await Tweet.findByIdAndUpdate(
+    tweetId,
+    {
+      $push: { likes: userId },
+    } /*        {
             new: true
-        } */)
-    return res.redirect("back")
+        } */
+  );
+  return res.redirect("back");
 }
 
 // PATCH - Unlike
 async function UnlikeTweet(req, res) {
-    const tweetId = req.params.id
-    const userId = req.user.id
-    await Tweet.findByIdAndUpdate(tweetId,
-        {
-            $pull: { likes: userId }
-        }/* , {
+  const tweetId = req.params.id;
+  const userId = req.user.id;
+  await Tweet.findByIdAndUpdate(
+    tweetId,
+    {
+      $pull: { likes: userId },
+    } /* , {
         new: true
-    } */)
-    return res.redirect("back")
+    } */
+  );
+  return res.redirect("back");
 }
 
-
 module.exports = {
-    index,
-    store,
-    destroy,
-    LikeTweet,
-    UnlikeTweet
+  index,
+  store,
+  destroy,
+  LikeTweet,
+  UnlikeTweet,
 };

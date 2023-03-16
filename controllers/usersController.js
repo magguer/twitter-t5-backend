@@ -3,7 +3,6 @@ const bcrypt = require("bcryptjs");
 const formidable = require("formidable");
 const jwt = require("jsonwebtoken");
 
-
 // POST - Tokens
 async function token(req, res) {
   const user = await User.findOne({ email: req.body.email });
@@ -17,14 +16,14 @@ async function token(req, res) {
   try {
     const payload = { id: user.id };
     const secret = "privateKey";
-    const token = jwt.sign(payload, secret, { expiresIn: '1h' });
+    const token = jwt.sign(payload, secret, { expiresIn: "1h" });
     res.json({
       userName: user.username,
       userId: user.id,
       token,
       userImage: user.image,
       userFirstName: user.firstname,
-      userLastName: user.lastname
+      userLastName: user.lastname,
     });
   } catch (e) {
     res.status(400).send(e);
@@ -46,13 +45,13 @@ async function store(req, res) {
       fields.password === "" ||
       fields.firstname === ""
     ) {
-      res.status(404).json("Rellena todos los campos.")
+      res.status(404).json("Rellena todos los campos.");
     } else {
       const unavailableUser = users.some(
         (u) => u.username === fields.username || u.email === fields.email
       );
       if (unavailableUser) {
-        res.status(404).json("El usuario ya existe.")
+        res.status(404).json("El usuario ya existe.");
       } else {
         await User.create({
           firstname: fields.firstname,
@@ -62,7 +61,7 @@ async function store(req, res) {
           image: files.image.newFilename,
           password: fields.password,
         });
-        res.status(201).json("Todo OK")
+        res.status(201).json("Todo OK");
       }
     }
   });
@@ -73,7 +72,7 @@ async function bannerEdit(req, res) {
   await User.findByIdAndUpdate(req.user.id, {
     banner: req.body.banner,
   });
-  res.status(200).json("Todo OK")
+  res.status(200).json("Todo OK");
 }
 
 // PATCH - Follow
@@ -87,7 +86,7 @@ async function follow(req, res) {
   await User.findByIdAndUpdate(follow, {
     $push: { followers: userId },
   });
-  res.status(201).json("Todo OK")
+  res.status(201).json("Todo OK");
 }
 
 // PATCH - Unfollow
@@ -98,10 +97,10 @@ async function unfollow(req, res) {
   await User.findByIdAndUpdate(req.params.id, {
     $pull: { followers: req.auth.id },
   });
-  res.status(201).json("Todo OK")
+  res.status(201).json("Todo OK");
 }
 
-// GET - Usuario 
+// GET - Usuario
 async function show(req, res) {
   const userProfile = await User.findOne({
     username: req.params.username,
@@ -115,21 +114,24 @@ async function show(req, res) {
 // GET - Followers de Usuario
 async function followers(req, res) {
   /*   const usersInfo = await User.aggregate([{ $sample: { size: 4 } }]); */
-  const userParamsFollowers = await User.findOne({ username: req.params.username });
+  const userParamsFollowers = await User.findOne({
+    username: req.params.username,
+  });
   const followers = userParamsFollowers.followers;
-  const usersFollowers = await User.find({ _id: { $in: followers } });
-  return res.json({ usersFollowers, userParamsFollowers/* , usersInfo */ });
+  const usersFollowers = await User.find({ _id: { $in: followers } }); //include
+  return res.json({ usersFollowers, userParamsFollowers /* , usersInfo */ });
 }
 
 // GET - Following de Usuario
 async function following(req, res) {
   /*  const usersInfo = await User.aggregate([{ $sample: { size: 4 } }]); */
-  const userParamsFollowing = await User.findOne({ username: req.params.username });
+  const userParamsFollowing = await User.findOne({
+    username: req.params.username,
+  });
   const followings = userParamsFollowing.following;
   const usersFollowing = await User.find({ _id: { $in: followings } });
-  return res.json({ usersFollowing, userParamsFollowing/* , usersInfo */ });
+  return res.json({ usersFollowing, userParamsFollowing /* , usersInfo */ });
 }
-
 
 module.exports = {
   followers,
@@ -139,5 +141,5 @@ module.exports = {
   show,
   bannerEdit,
   store,
-  token
+  token,
 };
