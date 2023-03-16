@@ -50,10 +50,10 @@ async function store(req, res) {
 // DELETE - Tweet
 async function destroy(req, res) {
   await Tweet.findByIdAndDelete(req.params.id);
-  await User.findByIdAndUpdate(req.user.id, {
+  await User.findByIdAndUpdate(req.auth.id, {
     $pull: { tweets: req.params.id },
   });
-  return res.redirect(`back`);
+  return res.status(200).json("OK");
 }
 
 // PATCH - Like
