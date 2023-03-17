@@ -2,6 +2,7 @@ const { User } = require("../models");
 const bcrypt = require("bcryptjs");
 const formidable = require("formidable");
 const jwt = require("jsonwebtoken");
+const mongoose = require("mongoose");
 
 // POST - Tokens
 async function token(req, res) {
@@ -137,9 +138,23 @@ async function following(req, res) {
 
 // GET - 4 RANDOM USERS
 async function randomUser(req, res) {
-  const usersInfo = await User.aggregate([{ $sample: { size: 4 } }]);
+  //const usersInfo = await User.aggregate([{ $sample: { size: 4 } }]);
+  const usersInfo = await User.aggregate([
+    { $match: { _id: { $ne: mongoose.Types.ObjectId(req.auth.id) } } },
+    { $sample: { size: 4 } },
+  ]);
+
   return res.json(usersInfo);
 }
+
+// const userId = req.auth.id;
+// const newArr = [];
+// for (const user of usersInfo) {
+//   if (String(user._id) !== userId  ) {
+//     newArr.push(user);
+//   }
+// }
+//  return res.json(newArr);
 
 module.exports = {
   store,
@@ -150,5 +165,5 @@ module.exports = {
   unfollow,
   bannerEdit,
   token,
-  randomUser
+  randomUser,
 };
