@@ -12,7 +12,7 @@ router.get("/random", usersController.randomUser);
 router.get("/:username", usersController.show);
 router.get("/:username/followers", usersController.followers);
 router.get("/:username/following", usersController.following);
-/* router.patch("/banner", usersController.bannerEdit); */
+router.patch("/:username", usersController.edit)
 
 // Hacer Toggle de Follow
 router.patch("/:id/follow", usersController.follow);

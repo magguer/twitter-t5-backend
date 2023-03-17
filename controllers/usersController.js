@@ -6,36 +6,42 @@ const mongoose = require("mongoose");
 
 // POST - Tokens
 async function token(req, res) {
-  const user = await User.findOne({ email: req.body.email })
-    .populate("tweets")
-    .populate("following")
-    .populate("followers");
-  if (!user) {
-    res.json("El usuario  no  existe");
-  }
-  const match = await bcrypt.compare(req.body.password, user.password);
-  if (!match) {
-    res.json("La pass es inválida");
-  }
-  try {
-    const payload = { id: user.id };
-    const secret = process.env.JWT_SECRET;
-    const token = jwt.sign(payload, secret, { expiresIn: "24h" });
-    res.json({
-      userName: user.username,
-      userId: user.id,
-      userToken: token,
-      userImage: user.image,
-      userFirstName: user.firstname,
-      userLastName: user.lastname,
-      userFollowers: user.followers,
-      userFollowing: user.following,
-      userTweets: user.tweets,
-    });
-  } catch (e) {
-    res.status(400).send(e);
+  if (req.body.email === "" || req.body.password === "") {
+    res.json("Rellene todos los campos.");
+  } else {
+    const user = await User.findOne({ email: req.body.email })
+      .populate("tweets")
+      .populate("following")
+      .populate("followers");
+    if (!user) {
+      res.json("El usuario  no  existe");
+    }
+    const match = await bcrypt.compare(req.body.password, user.password);
+    if (!match) {
+      res.json("La pass es inválida");
+    }
+    try {
+      const payload = { id: user.id };
+      const secret = process.env.JWT_SECRET;
+      const token = jwt.sign(payload, secret, { expiresIn: "24h" });
+      res.json({
+        userName: user.username,
+        userId: user.id,
+        userToken: token,
+        userImage: user.image,
+        userFirstName: user.firstname,
+        userLastName: user.lastname,
+        userFollowers: user.followers,
+        userFollowing: user.following,
+        userTweets: user.tweets,
+      });
+    } catch (e) {
+      res.status(400).send(e);
+    }
   }
 }
+
+
 
 // POST- Usuario en la DB
 async function store(req, res) {
@@ -73,6 +79,34 @@ async function store(req, res) {
     }
   });
 }
+
+// PATCH - User 
+async function edit(req, res) {
+  const form = formidable({
+    uploadDir: __dirname + "/../public/img",
+    keepExtensions: true,
+    multiples: true,
+  });
+  form.parse(req, async (err, fields, files) => {
+    console.log(files.banner);
+    if (files.banner) {
+      await User.findByIdAndUpdate(req.auth.id, {
+        firstname: fields.firstname,
+        lastname: fields.lastname,
+        username: fields.username,
+        banner: files.banner.newFilename
+      })
+    } else {
+      await User.findByIdAndUpdate(req.auth.id, {
+        firstname: fields.firstname,
+        lastname: fields.lastname,
+        username: fields.username,
+      })
+    }
+    res.status(200).json("Todo OK");
+  })
+}
+
 
 // PATCH - Banner en User
 async function bannerEdit(req, res) {
@@ -147,6 +181,8 @@ async function randomUser(req, res) {
   return res.json(usersInfo);
 }
 
+
+
 // const userId = req.auth.id;
 // const newArr = [];
 // for (const user of usersInfo) {
@@ -159,6 +195,7 @@ async function randomUser(req, res) {
 module.exports = {
   store,
   show,
+  edit,
   followers,
   following,
   follow,
