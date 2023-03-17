@@ -14,6 +14,7 @@
  */
 const { faker } = require("@faker-js/faker");
 const { User } = require("../models");
+const slugify = require('slugify')
 
 faker.locale = "es";
 
@@ -33,7 +34,15 @@ module.exports = async () => {
       password: "asd",
       image: faker.internet.avatar(),
       description: faker.lorem.sentence(10),
-      email: `${firstname}_${lastname}@gmail.com`,
+      email: slugify(`${firstname}_${lastname}@gmail.com`, {
+        replacement: '-',  
+        lower: true,      
+        locale: 'en',       
+
+      }),
+  
+
+
     });
     users.push(user);
   }
