@@ -66,6 +66,13 @@ const userSchema = new Schema(
   { timestamps: true }
 );
 
+userSchema.methods.toJSON = function () {
+  const user = this.toObject();
+  user.id = user._id.toString();
+  delete user.password;
+  return user;
+};
+
 // Bcrypt - Password
 userSchema.pre('save', async function (next) {
   if (this.isModified("password") || this.isNew) {
