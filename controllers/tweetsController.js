@@ -14,14 +14,13 @@ async function index(req, res) {
 
 // POST - Tweet
 async function store(req, res) {
-  console.log(req.body.tweet);
   const newTweet = new Tweet({
     user: req.auth.id, //auth por jwt en vez de .user
     text: req.body.tweet, // mismo nombre del value
   });
-  newTweet.save();
-  await User.findByIdAndUpdate(req.auth.id, { $push: { tweets: newTweet } });
-  return res.status(200).json("OK");
+  newTweet.save()
+  const user = await User.findByIdAndUpdate(req.auth.id, { $push: { tweets: newTweet } });
+  return res.json({newTweet, user})
 }
 
 // DELETE - Tweet
