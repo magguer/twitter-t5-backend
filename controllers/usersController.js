@@ -31,6 +31,7 @@ async function token(req, res) {
         userImage: user.image,
         userFirstName: user.firstname,
         userLastName: user.lastname,
+        userDescription: user.description,
         userFollowers: user.followers,
         userFollowing: user.following,
         userTweets: user.tweets,
@@ -40,8 +41,6 @@ async function token(req, res) {
     }
   }
 }
-
-
 
 // POST- Usuario en la DB
 async function store(req, res) {
@@ -80,7 +79,7 @@ async function store(req, res) {
   });
 }
 
-// PATCH - User 
+// PATCH - User
 async function edit(req, res) {
   const form = formidable({
     uploadDir: __dirname + "/../public/img",
@@ -94,19 +93,20 @@ async function edit(req, res) {
         firstname: fields.firstname,
         lastname: fields.lastname,
         username: fields.username,
-        banner: files.banner.newFilename
-      })
+        banner: files.banner.newFilename,
+        description: fields.description,
+      });
     } else {
       await User.findByIdAndUpdate(req.auth.id, {
         firstname: fields.firstname,
         lastname: fields.lastname,
         username: fields.username,
-      })
+        description: fields.description,
+      });
     }
     res.status(200).json("Todo OK");
-  })
+  });
 }
-
 
 // PATCH - Banner en User
 async function bannerEdit(req, res) {
@@ -180,8 +180,6 @@ async function randomUser(req, res) {
 
   return res.json(usersInfo);
 }
-
-
 
 // const userId = req.auth.id;
 // const newArr = [];
