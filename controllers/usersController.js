@@ -92,6 +92,7 @@ async function edit(req, res) {
         firstname: fields.firstname,
         lastname: fields.lastname,
         username: fields.username,
+        description: fields.description,
         banner: files.banner.newFilename,
       });
     } else {
@@ -99,6 +100,7 @@ async function edit(req, res) {
         firstname: fields.firstname,
         lastname: fields.lastname,
         username: fields.username,
+        description: fields.description,
       });
     }
     res.status(200).json("Todo OK");
