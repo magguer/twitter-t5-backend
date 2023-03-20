@@ -54,15 +54,16 @@ async function store(req, res) {
       fields.username === "" ||
       fields.email === "" ||
       fields.password === "" ||
-      fields.firstname === ""
+      fields.firstname === "" ||
+      fields.password === ""
     ) {
-      res.status(404).json("Rellena todos los campos.");
+      res.json("Fill all the fields.");
     } else {
       const unavailableUser = users.some(
         (u) => u.username === fields.username || u.email === fields.email
       );
       if (unavailableUser) {
-        res.status(404).json("El usuario ya existe.");
+        res.json("User already exist.");
       } else {
         await User.create({
           firstname: fields.firstname,

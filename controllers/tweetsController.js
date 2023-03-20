@@ -8,7 +8,7 @@ async function index(req, res) {
     .populate("user")
     .populate("likes");
   return res.json({
-    tweets,
+    tweets
   });
 }
 
@@ -20,7 +20,7 @@ async function store(req, res) {
   });
   newTweet.save()
   const user = await User.findByIdAndUpdate(req.auth.id, { $push: { tweets: newTweet } });
-  return res.json({newTweet, user})
+  return res.json({ newTweet, user })
 }
 
 // DELETE - Tweet
