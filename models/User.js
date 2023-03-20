@@ -41,7 +41,10 @@ const userSchema = new Schema(
       unique: true,
     },
     description: {
-      type: String,
+      type: String
+    },
+    verify: {
+      type: Boolean
     },
     following: [
       {
