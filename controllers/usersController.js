@@ -148,7 +148,7 @@ async function unfollow(req, res) {
 async function show(req, res) {
   const userProfile = await User.findOne({
     username: req.params.username,
-  }).populate({ path: "tweets", options: { sort: { createdAt: -1 } } });
+  }).populate({ path: "tweets", populate: "likes", options: { sort: { createdAt: -1 } } });
   return res.json({
     userProfile,
   });
