@@ -25,23 +25,21 @@ async function token(req, res) {
       const secret = process.env.JWT_SECRET;
       const token = jwt.sign(payload, secret, { expiresIn: "24h" });
       res.json({
-        userName: user.username,
-        userId: user.id,
-        userToken: token,
-        userImage: user.image,
-        userFirstName: user.firstname,
-        userLastName: user.lastname,
-        userFollowers: user.followers,
-        userFollowing: user.following,
-        userTweets: user.tweets,
+        username: user.username,
+        id: user.id,
+        token: token,
+        image: user.image,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        followers: user.followers,
+        following: user.following,
+        tweets: user.tweets,
       });
     } catch (e) {
       res.status(400).send(e);
     }
   }
 }
-
-
 
 // POST- Usuario en la DB
 async function store(req, res) {
@@ -80,7 +78,7 @@ async function store(req, res) {
   });
 }
 
-// PATCH - User 
+// PATCH - User
 async function edit(req, res) {
   const form = formidable({
     uploadDir: __dirname + "/../public/img",
@@ -94,19 +92,18 @@ async function edit(req, res) {
         firstname: fields.firstname,
         lastname: fields.lastname,
         username: fields.username,
-        banner: files.banner.newFilename
-      })
+        banner: files.banner.newFilename,
+      });
     } else {
       await User.findByIdAndUpdate(req.auth.id, {
         firstname: fields.firstname,
         lastname: fields.lastname,
         username: fields.username,
-      })
+      });
     }
     res.status(200).json("Todo OK");
-  })
+  });
 }
-
 
 // PATCH - Banner en User
 async function bannerEdit(req, res) {
@@ -180,8 +177,6 @@ async function randomUser(req, res) {
 
   return res.json(usersInfo);
 }
-
-
 
 // const userId = req.auth.id;
 // const newArr = [];
