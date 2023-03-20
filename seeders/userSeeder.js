@@ -35,14 +35,12 @@ module.exports = async () => {
       image: faker.internet.avatar(),
       description: faker.lorem.sentence(10),
       email: slugify(`${firstname}_${lastname}@gmail.com`, {
-        replacement: '-',  
-        lower: true,      
-        locale: 'en',       
+        replacement: '-',
+        lower: true,
+        locale: 'en',
 
       }),
-  
-
-
+      verify: false
     });
     users.push(user);
   }

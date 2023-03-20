@@ -69,8 +69,10 @@ async function store(req, res) {
           lastname: fields.lastname,
           email: fields.email,
           username: fields.username,
+          description: "Hey there, I'm using Twitter!",
           image: files.image.newFilename,
           password: fields.password,
+          verify: false
         });
         res.status(201).json("Todo OK");
       }
@@ -92,6 +94,7 @@ async function edit(req, res) {
         lastname: fields.lastname,
         username: fields.username,
         description: fields.description,
+        verify: fields.verify,
         image: files.image.newFilename,
       });
     } else if (files.banner) {
@@ -100,6 +103,7 @@ async function edit(req, res) {
         lastname: fields.lastname,
         username: fields.username,
         description: fields.description,
+        verify: fields.verify,
         banner: files.banner.newFilename,
       });
     } else {
@@ -107,6 +111,7 @@ async function edit(req, res) {
         firstname: fields.firstname,
         lastname: fields.lastname,
         username: fields.username,
+        verify: fields.verify,
         description: fields.description,
       });
     }
