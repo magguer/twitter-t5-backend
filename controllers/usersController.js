@@ -86,15 +86,21 @@ async function edit(req, res) {
     multiples: true,
   });
   form.parse(req, async (err, fields, files) => {
-    console.log(files.banner);
-    if (files.banner) {
+    if (files.image) {
+      await User.findByIdAndUpdate(req.auth.id, {
+        firstname: fields.firstname,
+        lastname: fields.lastname,
+        username: fields.username,
+        description: fields.description,
+        image: files.image.newFilename,
+      });
+    } else if (files.banner) {
       await User.findByIdAndUpdate(req.auth.id, {
         firstname: fields.firstname,
         lastname: fields.lastname,
         username: fields.username,
         description: fields.description,
         banner: files.banner.newFilename,
-        image: files.image.newFilename,
       });
     } else {
       await User.findByIdAndUpdate(req.auth.id, {
@@ -102,19 +108,10 @@ async function edit(req, res) {
         lastname: fields.lastname,
         username: fields.username,
         description: fields.description,
-        image: files.image.newFilename,
       });
     }
     res.status(200).json("Todo OK");
   });
-}
-
-// PATCH - Banner en User
-async function bannerEdit(req, res) {
-  await User.findByIdAndUpdate(req.user.id, {
-    banner: req.body.banner,
-  });
-  res.status(200).json("Todo OK");
 }
 
 // PATCH - Follow
@@ -199,7 +196,6 @@ module.exports = {
   following,
   follow,
   unfollow,
-  bannerEdit,
   token,
   randomUser,
 };
