@@ -6,7 +6,8 @@ async function index(req, res) {
   const tweets = await Tweet.find({ user: { $in: [user, ...user.following] } })
     .sort({ createdAt: -1 })
     .populate("user")
-    .populate("likes");
+    .populate("likes")
+    .populate("retweets")
   return res.json({
     tweets
   });
@@ -52,10 +53,18 @@ async function dislikeTweet(req, res) {
   return res.status(200).json("OK");
 }
 
+// PATCH - Retweet
+async function retweet(req, res) {
+  await User.findByIdAndUpdate(req.auth.id, { $push: { retweets: res.body.tweet } });
+  await Tweet.findByIdAndUpdate(res.body.tweet.id, { $push: { retweets: res.body.tweet } });
+  res.json("todo OK")
+}
+
 module.exports = {
   index,
   store,
   destroy,
   likeTweet,
   dislikeTweet,
+  retweet
 };
