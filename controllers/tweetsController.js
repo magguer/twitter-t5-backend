@@ -14,6 +14,7 @@ async function index(req, res) {
 
 // POST - Tweet
 async function store(req, res) {
+  console.log(req.body.tweet);
   const newTweet = new Tweet({
     user: req.auth.id, //auth por jwt en vez de .user
     text: req.body.tweet, // mismo nombre del value
@@ -36,12 +37,9 @@ async function destroy(req, res) {
 async function likeTweet(req, res) {
   const tweetId = req.params.id;
   const userId = req.auth.id;
-  await Tweet.findByIdAndUpdate(
-    tweetId,
-    {
-      $push: { likes: userId },
-    }
-  );
+  await Tweet.findByIdAndUpdate(tweetId, {
+    $push: { likes: userId },
+  });
   return res.status(200).json("OK");
 }
 
@@ -49,12 +47,9 @@ async function likeTweet(req, res) {
 async function dislikeTweet(req, res) {
   const tweetId = req.params.id;
   const userId = req.auth.id;
-  await Tweet.findByIdAndUpdate(
-    tweetId,
-    {
-      $pull: { likes: userId },
-    }
-  );
+  await Tweet.findByIdAndUpdate(tweetId, {
+    $pull: { likes: userId },
+  });
   return res.status(200).json("OK");
 }
 
