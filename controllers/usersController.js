@@ -94,6 +94,7 @@ async function edit(req, res) {
         username: fields.username,
         description: fields.description,
         banner: files.banner.newFilename,
+        image: files.image.newFilename,
       });
     } else {
       await User.findByIdAndUpdate(req.auth.id, {
@@ -101,6 +102,7 @@ async function edit(req, res) {
         lastname: fields.lastname,
         username: fields.username,
         description: fields.description,
+        image: files.image.newFilename,
       });
     }
     res.status(200).json("Todo OK");
