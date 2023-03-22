@@ -38,7 +38,6 @@ module.exports = async () => {
         replacement: '-',
         lower: true,
         locale: 'en',
-
       }),
       verify: false
     });
