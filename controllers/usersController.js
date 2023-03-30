@@ -178,7 +178,7 @@ async function following(req, res) {
 async function randomUser(req, res) {
   //const usersInfo = await User.aggregate([{ $sample: { size: 4 } }]);
   const usersInfo = await User.aggregate([
-    { $match: { _id: { $ne: mongoose.Types.ObjectId(req.auth.id) } } },
+    /*  { $match: { _id: { $ne: mongoose.Types.ObjectId(req.auth.id) } } }, */
     { $sample: { size: 4 } },
   ]);
 

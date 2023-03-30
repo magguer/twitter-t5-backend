@@ -6,7 +6,7 @@ const usersController = require("../controllers/usersController");
 router.post("/users", usersController.store);
 router.post("/tokens", usersController.token);
 
-router.use(checkJwt({ secret: process.env.JWT_SECRET, algorithms: ["HS256"] }));
+/* router.use(checkJwt({ secret: process.env.JWT_SECRET, algorithms: ["HS256"] })); */
 
 router.get("/random", usersController.randomUser);
 router.get("/:username", usersController.show);
