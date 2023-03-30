@@ -3,9 +3,7 @@ const cors = require("cors");
 const path = require("path");
 const methodOverride = require("method-override");
 const express = require("express");
-const flash = require("express-flash");
 
-const sessions = require("./sessions");
 const routes = require("./routes");
 
 const APP_PORT = process.env.APP_PORT || 8000;
@@ -18,10 +16,8 @@ app.use(express.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.use(express.json());
 
-sessions(app);
 routes(app);
 
-app.use(flash());
 
 app.listen(APP_PORT, () => {
   console.log(`\n[Express] Servidor corriendo en el puerto ${APP_PORT}.`);

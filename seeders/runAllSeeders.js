@@ -24,7 +24,8 @@ async function runAllSeeders() {
    * PD: El método `dropDatabase` de Mongoose elimina toda la base de datos.
    */
   const { mongoose } = require("../db");
-  await mongoose.connection.dropDatabase();
+  await mongoose.connection.dropCollection("tweets");
+  await mongoose.connection.dropCollection("users");
 
   // Seeders:
 

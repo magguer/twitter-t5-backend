@@ -100,6 +100,5 @@ userSchema.pre('save', async function (next) {
 
 
 
-// Método para Slagify los usernames
 const User = mongoose.model("User", userSchema);
 module.exports = User;

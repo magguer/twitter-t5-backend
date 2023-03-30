@@ -185,15 +185,6 @@ async function randomUser(req, res) {
   return res.json(usersInfo);
 }
 
-// const userId = req.auth.id;
-// const newArr = [];
-// for (const user of usersInfo) {
-//   if (String(user._id) !== userId  ) {
-//     newArr.push(user);
-//   }
-// }
-//  return res.json(newArr);
-
 module.exports = {
   store,
   show,
