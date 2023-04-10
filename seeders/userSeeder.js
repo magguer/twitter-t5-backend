@@ -31,7 +31,7 @@ module.exports = async () => {
       firstname,
       lastname,
       username,
-      password: "asd",
+      password: "1234",
       image: faker.internet.avatar(),
       description: faker.lorem.sentence(10),
       email: slugify(`${firstname}_${lastname}@gmail.com`, {
@@ -43,6 +43,18 @@ module.exports = async () => {
     });
     users.push(user);
   }
+
+  const userDefault = new User({
+    firstname: "Jack",
+    lastname: "Dorsey",
+    username: "user_default",
+    password: "1234",
+    image: faker.internet.avatar(),
+    description: faker.lorem.sentence(10),
+    email: "user@default.com",
+    verify: false
+  })
+  users.push(userDefault);
 
   for (const user of users) {
     const randomUser =

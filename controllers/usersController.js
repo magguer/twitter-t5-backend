@@ -49,6 +49,7 @@ async function store(req, res) {
     multiples: true,
   });
   form.parse(req, async (err, fields, files) => {
+    console.log(files);
     const users = await User.find();
     if (
       fields.username === "" ||

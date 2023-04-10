@@ -27,6 +27,8 @@ async function runAllSeeders() {
   await mongoose.connection.dropCollection("tweets");
   await mongoose.connection.dropCollection("users");
 
+  /*   await mongoose.connection.dropDatabase();
+   */
   // Seeders:
 
   await require("./userSeeder")();

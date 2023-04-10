@@ -3,7 +3,7 @@ const router = express.Router();
 const { expressjwt: checkJwt } = require("express-jwt");
 const usersController = require("../controllers/usersController");
 
-router.post("/users", usersController.store);
+router.post("/", usersController.store);
 router.post("/tokens", usersController.token);
 
 router.use(checkJwt({ secret: process.env.JWT_SECRET, algorithms: ["HS256"] }));
